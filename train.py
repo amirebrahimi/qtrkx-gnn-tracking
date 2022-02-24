@@ -11,7 +11,7 @@ import tensorflow as tf
 from tools.tools import *
 from test import test
 ###############################################################################
-def check_gradients(gradients, epsilon=10e-8, threshold=10e4):
+def check_gradients(gradients, model, epsilon=10e-8, threshold=10e4):
     '''
     Returns
     -------
@@ -45,15 +45,15 @@ def check_gradients(gradients, epsilon=10e-8, threshold=10e4):
         # num_layers = len(gradients)
         vanishing_count = len(np.where(first_grads < np.percentile(first_grads, 25)))
         total_count = len(tf.reshape(first_grads, [-1]))
-        print(f"Vanishing gradients: {vanishing_count} out of {total_count} ({100 * vanishing_count / total_count}%)")
-        if (np.mean(last_grads) / np.mean(first_grads) > threshold):
-            print(f"Exploding gradients, too! {np.mean(last_grads) / np.mean(first_grads)} > {threshold}")
 
         for i, g in enumerate(gradients):
             if np.abs(np.percentile(g, 0.25)) < 0. + epsilon:
                 layer_vanishing_count = len(np.where(g < np.percentile(g, 25)))
                 layer_total_count = len(tf.reshape(g, [-1]))
-                print(f"Vanishing gradients (layer {i}): {layer_vanishing_count} out of {layer_total_count} ({100 * layer_vanishing_count / layer_total_count}%)")
+                print(f"Vanishing gradients (layer {i} - {model.trainable_variables[i].name}): {layer_vanishing_count} out of {layer_total_count} ({100 * layer_vanishing_count / layer_total_count}%)")
+
+        if (np.mean(last_grads) / np.mean(first_grads) > threshold):
+            print(f"Exploding gradients, too! {np.mean(last_grads) / np.mean(first_grads)} > {threshold}")
 
         return 2
     # exploding
@@ -183,7 +183,7 @@ if __name__ == '__main__':
             dt = datetime.datetime.now() - t0  
             t = dt.seconds + dt.microseconds * 1e-6 # time spent in seconds
 
-            check_gradients(grads)
+            check_gradients(grads, model)
 
             # Print summary
             print(
@@ -210,7 +210,7 @@ if __name__ == '__main__':
                 log_gradients(config['log_dir'], grads)
             
             # Test every TEST_every
-            if (n_step+1)%config['TEST_every']==0:
+            if config['TEST_every'] != 0 and (n_step+1)%config['TEST_every']==0:
                 model.trainable = False
                 test(config, model, 'valid')
                 test(config, model, 'train')
