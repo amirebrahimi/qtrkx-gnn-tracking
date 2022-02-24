@@ -11,6 +11,49 @@ import tensorflow as tf
 from tools.tools import *
 from test import test
 ###############################################################################
+def check_gradients(gradients, epsilon=10e-8, threshold=10e4):
+    '''
+    Returns
+    -------
+    False : nothing wrong with gradients
+    1 : Nan in gradients
+    2 : 25 percentage of gradients ~ 0.
+    3 : gradients is exploded
+    '''
+    first_grads = None
+    last_grads = None
+    # ====== only need to check the first gradients ====== #
+    for g in gradients:
+        if g.ndim >= 2:
+            first_grads = g
+            break
+    if first_grads is None:
+        first_grads = gradients[0]
+
+    for g in reversed(gradients):
+        if g.ndim >= 2:
+            last_grads = g
+            break
+    if last_grads is None:
+        last_grads = gradients[-1]
+    # ====== get statistic of grads ====== #
+    # NaN gradients
+    if np.isnan(np.min(first_grads)):
+        return 1
+    # too small value: Vanishing
+    print(len(gradients))
+    print(len(np.where(first_grads < np.percentile(first_grads, 25))))
+    vanishing_count = len(np.where(first_grads < np.percentile(first_grads, 25)))
+    total_count = len(tf.reshape(first_grads, [-1]))
+    print(vanishing_count, total_count, vanishing_count / total_count)
+    print(np.mean(last_grads) / np.mean(first_grads) > threshold)
+    if np.abs(np.percentile(first_grads, 0.25)) < 0. + epsilon:
+        return 2
+    # exploding
+    if np.mean(last_grads) / np.mean(first_grads) > threshold:
+        return 3
+    return False
+
 def batch_train_step(n_step):
     '''combines multiple  graph inputs and executes a step on their mean'''
     with tf.GradientTape() as tape:
@@ -127,7 +170,9 @@ if __name__ == '__main__':
 
             # iterate a step
             loss_eval, grads = batch_train_step(n_step)
-                        
+            
+            print(check_gradients(grads))
+
             # end timer
             dt = datetime.datetime.now() - t0  
             t = dt.seconds + dt.microseconds * 1e-6 # time spent in seconds
