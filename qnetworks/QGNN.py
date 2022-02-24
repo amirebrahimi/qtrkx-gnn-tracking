@@ -3,6 +3,9 @@ import tensorflow_quantum as tfq
 import numpy as np
 import cirq
 from qcircuits.QCircuit import QCircuit
+
+USE_BATCH_NORM = False
+
 ###############################################################################
 class EdgeNet(tf.keras.layers.Layer):
     def __init__(self, name='EdgeNet'):
@@ -56,8 +59,9 @@ class EdgeNet(tf.keras.layers.Layer):
             raise ValueError('Wrong PQC Specifications!')
 
         # Classical readout layer
-        print("Initializing EdgeNet with BatchNormalization")
-        self.bn_layer = tf.keras.layers.BatchNormalization()
+        if USE_BATCH_NORM:
+            print("Initializing with BatchNormalization")
+            self.bn_layer = tf.keras.layers.BatchNormalization()
         self.readout_layer = tf.keras.layers.Dense(1, activation='sigmoid')
 
         # Initialize parameters of the PQC
@@ -108,7 +112,10 @@ class EdgeNet(tf.keras.layers.Layer):
             )
     
         # Return the output of the final layer
-        return self.readout_layer(self.bn_layer(exps))
+        if USE_BATCH_NORM:
+            exps = self.bn_layer(exps)
+
+        return self.readout_layer(exps)
 
 class NodeNet(tf.keras.layers.Layer):
     def __init__(self, name='NodeNet'):
@@ -163,8 +170,9 @@ class NodeNet(tf.keras.layers.Layer):
             raise ValueError('Wrong PQC Specifications!')
 
         # Classical readout layer
-        print("Initializing NodeNet with BatchNormalization")
-        self.bn_layer = tf.keras.layers.BatchNormalization()
+        if USE_BATCH_NORM:
+            print("Initializing NodeNet with BatchNormalization")
+            self.bn_layer = tf.keras.layers.BatchNormalization()
         self.readout_layer = tf.keras.layers.Dense(
             GNN.config['hid_dim'],
             activation='sigmoid'
@@ -220,7 +228,10 @@ class NodeNet(tf.keras.layers.Layer):
                 repetitions=GNN.config['NN_qc']['repetitions'])
 
         # Return the output of the final layer
-        return self.readout_layer(self.bn_layer(exps))
+        if USE_BATCH_NORM:
+            exps = self.bn_layer(exps)
+            
+        return self.readout_layer(exps)
 
 ###############################################################################
 class GNN(tf.keras.Model):

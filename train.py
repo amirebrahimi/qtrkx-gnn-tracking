@@ -48,6 +48,13 @@ def check_gradients(gradients, epsilon=10e-8, threshold=10e4):
         print(f"Vanishing gradients: {vanishing_count} out of {total_count} ({100 * vanishing_count / total_count}%)")
         if (np.mean(last_grads) / np.mean(first_grads) > threshold):
             print(f"Exploding gradients, too! {np.mean(last_grads) / np.mean(first_grads)} > {threshold}")
+
+        for i, g in enumerate(gradients):
+            if np.abs(np.percentile(g, 0.25)) < 0. + epsilon:
+                layer_vanishing_count = len(np.where(g < np.percentile(g, 25)))
+                layer_total_count = len(tf.reshape(g, [-1]))
+                print(f"Vanishing gradients (layer {i}): {layer_vanishing_count} out of {layer_total_count} ({100 * layer_vanishing_count / layer_total_count}%)")
+
         return 2
     # exploding
     if np.mean(last_grads) / np.mean(first_grads) > threshold:
