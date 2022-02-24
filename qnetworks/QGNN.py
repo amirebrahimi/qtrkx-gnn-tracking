@@ -55,7 +55,9 @@ class EdgeNet(tf.keras.layers.Layer):
         else: 
             raise ValueError('Wrong PQC Specifications!')
 
-         # Classical readout layer
+        # Classical readout layer
+        print("Initializing EdgeNet with BatchNormalization")
+        self.bn_layer = tf.keras.layers.BatchNormalization()
         self.readout_layer = tf.keras.layers.Dense(1, activation='sigmoid')
 
         # Initialize parameters of the PQC
@@ -106,7 +108,7 @@ class EdgeNet(tf.keras.layers.Layer):
             )
     
         # Return the output of the final layer
-        return self.readout_layer(exps)
+        return self.readout_layer(self.bn_layer(exps))
 
 class NodeNet(tf.keras.layers.Layer):
     def __init__(self, name='NodeNet'):
@@ -161,6 +163,8 @@ class NodeNet(tf.keras.layers.Layer):
             raise ValueError('Wrong PQC Specifications!')
 
         # Classical readout layer
+        print("Initializing NodeNet with BatchNormalization")
+        self.bn_layer = tf.keras.layers.BatchNormalization()
         self.readout_layer = tf.keras.layers.Dense(
             GNN.config['hid_dim'],
             activation='sigmoid'
@@ -216,7 +220,7 @@ class NodeNet(tf.keras.layers.Layer):
                 repetitions=GNN.config['NN_qc']['repetitions'])
 
         # Return the output of the final layer
-        return self.readout_layer(exps)
+        return self.readout_layer(self.bn_layer(exps))
 
 ###############################################################################
 class GNN(tf.keras.Model):

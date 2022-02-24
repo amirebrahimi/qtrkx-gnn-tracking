@@ -41,13 +41,13 @@ def check_gradients(gradients, epsilon=10e-8, threshold=10e4):
     if np.isnan(np.min(first_grads)):
         return 1
     # too small value: Vanishing
-    print(len(gradients))
-    print(len(np.where(first_grads < np.percentile(first_grads, 25))))
-    vanishing_count = len(np.where(first_grads < np.percentile(first_grads, 25)))
-    total_count = len(tf.reshape(first_grads, [-1]))
-    print(vanishing_count, total_count, vanishing_count / total_count)
-    print(np.mean(last_grads) / np.mean(first_grads) > threshold)
     if np.abs(np.percentile(first_grads, 0.25)) < 0. + epsilon:
+        # num_layers = len(gradients)
+        vanishing_count = len(np.where(first_grads < np.percentile(first_grads, 25)))
+        total_count = len(tf.reshape(first_grads, [-1]))
+        print(f"Vanishing gradients: {vanishing_count} out of {total_count} ({100 * vanishing_count / total_count}%)")
+        if (np.mean(last_grads) / np.mean(first_grads) > threshold):
+            print(f"Exploding gradients, too! {np.mean(last_grads) / np.mean(first_grads)} > {threshold}")
         return 2
     # exploding
     if np.mean(last_grads) / np.mean(first_grads) > threshold:
@@ -165,17 +165,18 @@ if __name__ == '__main__':
         shuffle(train_list) # shuffle the order every epoch
 
         for n_step in range(config['n_train']//config['batch_size']):
+            model.trainable = True
             # start timer
             t0 = datetime.datetime.now()  
 
             # iterate a step
             loss_eval, grads = batch_train_step(n_step)
             
-            print(check_gradients(grads))
-
             # end timer
             dt = datetime.datetime.now() - t0  
             t = dt.seconds + dt.microseconds * 1e-6 # time spent in seconds
+
+            check_gradients(grads)
 
             # Print summary
             print(
@@ -203,6 +204,7 @@ if __name__ == '__main__':
             
             # Test every TEST_every
             if (n_step+1)%config['TEST_every']==0:
+                model.trainable = False
                 test(config, model, 'valid')
                 test(config, model, 'train')
 
