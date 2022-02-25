@@ -91,12 +91,15 @@ def batch_train_step(n_step):
 
         loss_eval = loss_fn(labels, preds, sample_weight=weights)
 
-    grads = tape.gradient(loss_eval, model.trainable_variables)
+    grads = tape.gradient(loss_eval, model.trainable_variables)    
     opt.apply_gradients(zip(grads, model.trainable_variables))
 
     return loss_eval, grads
 
 if __name__ == '__main__':
+    np.random.seed(1234)
+    tf.random.set_seed(1234)
+
     # Read config file
     config = load_config(parse_args())
     tools.config = config
@@ -113,6 +116,9 @@ if __name__ == '__main__':
     # Load the network
     if config['network'] == 'QGNN':
         from qnetworks.QGNN import GNN
+        GNN.config = config
+    elif config['network'] == 'OGQGNN':
+        from qnetworks.OGQGNN import GNN
         GNN.config = config
     elif config['network'] == 'CGNN':
         from qnetworks.CGNN import GNN
