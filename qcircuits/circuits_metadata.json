@@ -69,7 +69,7 @@
         "simple_encoding_x": "simple_encoding_x",
         "simple_encoding_yh": "simple_encoding_yh",
         "simple_encoding_z": "simple_encoding_z",
-        "feature_map": "ZZFeatureMap",
+        "ZZFeatureMap": "ZZFeatureMap",
         "yz_arccos": "yz_arccos"
     },
     "qc_pqc_dict": {
