@@ -87,6 +87,8 @@ class QCircuit:
 			n_params = self.n_qubits*(self.n_layers+1)
 		elif self.PQC_id == '10_2des':
 			n_params = self.n_qubits*(self.n_layers+1)
+		elif self.PQC_id == 'qc102_pqc':
+			n_params = self.n_qubits*(self.n_layers+1)
 		else:
 			raise ValueError('PQC weights not defined')
 		return n_params
