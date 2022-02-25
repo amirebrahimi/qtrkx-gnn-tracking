@@ -29,6 +29,14 @@ class QCircuit:
 		
 		return self.circuit, self.qubits
 
+	def model_circuit_pqc_only(self):
+		self.qubits  = cirq.GridQubit.rect(self.n_qubits, 1)
+		self.circuit = cirq.Circuit()
+
+		self.PQC()(self.circuit, self.qubits, n_layers = self.n_layers, n_qubits = self.n_qubits)
+		
+		return self.circuit, self.qubits
+
 	def IEC(self):
 		'''information encoding circuit'''
 		return getattr(qcircuits, self.metadata['qc_iec_dict'][self.IEC_id])
