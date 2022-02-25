@@ -215,46 +215,73 @@ def qc6_pqc(circuit, qubits, n_layers=1, n_qubits=4):
 ###############################################################################
 ############################## SPSA Circuits ##################################
 ###############################################################################
+# def generate_random_qnn(circuit, qubits, params, n_layers=1):       
+#     #params = sympy.symbols('theta:{}'.format(n_layers)
+
+#     """Generate random QNN's with the same structure from McClean et al."""
+#     for qubit in qubits:
+#         circuit += cirq.ry(np.pi / 4.0)(qubit)
+
+#     for d in range(n_layers):
+#         # Add a series of single qubit rotations.
+#         for i, qubit in enumerate(qubits):
+#             random_n = np.random.uniform()
+#             random_rot = np.random.uniform(
+#             ) * 2.0 * np.pi if i != 0 or d != 0 else params
+#             if random_n > 2. / 3.:
+#                 # Add a Z.
+#                 circuit += cirq.rz(random_rot)(qubit)
+#             elif random_n > 1. / 3.:
+#                 # Add a Y.
+#                 circuit += cirq.ry(random_rot)(qubit)
+#             else:
+#                 # Add a X.
+#                 circuit += cirq.rx(random_rot)(qubit)
+
+#         # Add CZ ladder.
+#         for src, dest in zip(qubits, qubits[1:]):
+#             circuit += cirq.CZ(src, dest)
+
+#     return circuit
+           
+# def SPSA1_pqc(circuit, qubits, block_depth=1, n_layers=1):
+#     params = sympy.symbols('theta:{}'.format(1)
+                           
+#     # Generate initial block with symbol.
+#     prep_and_U = generate_random_qnn(circuit, qubits, params, n_layers)
+#     circuit += prep_and_U
+    
+#     # Generate dagger of initial block without symbol.
+#     U_dagger = (prep_and_U[1:])**-1
+#     circuit += cirq.resolve_parameters(
+#         U_dagger, param_resolver={symbol: np.random.uniform() * 2 * np.pi})
+    
+#     for d in range(n_layers - 1):
+#         # Get a random QNN.
+#         prep_and_U_circuit = generate_random_qnn(circuit, qubits, np.random.uniform() * 2 * np.pi, block_depth)
+
+#         # Remove the state-prep component
+#         U_circuit = prep_and_U_circuit[1:]
+
+#         # Add U
+#         circuit += U_circuit
+
+#         # Add U^dagger
+#         circuit += U_circuit**-1
+    
+#     return circuit
 def SPSA2_PQC(circuit, qubits, n_layers=1, n_qubits=4):
+    print("SPSA2_PQC")
     params  = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
     for i, qubit in enumerate(qubits):
         #symbol = sympy.Symbol('theta_{}'.format(i+1))
-        circuit.append(cirq.ry(np.pi/4.0)(qubit))
-
+        circuit.append(cirq.ry(params[i])(qubit))
     for layer in range(n_layers):
+        for i in range(n_qubits):
+            circuit.append(cirq.CZ(qubits[(n_qubits-2-i)%n_qubits], qubits[(n_qubits-1-i)%n_qubits]))
         for i, qubit in enumerate(qubits):
-            random_n = np.random.uniform()
-            random_rot = np.random.uniform() * 2.0 * np.pi if i != 0 or layer != 0 else params
-            if random_n > 2. / 3.:
-                # Add a Z.
-                circuit.append(cirq.rz(params[2*i])(qubit))
-                #circuit.append(cirq.rz(random_rot)(qubit))
-            elif random_n > 1. / 3.:
-                # Add a Y.
-                circuit.append(cirq.ry(params[2*i])(qubit))
-                #circuit.append(cirq.ry(random_rot)(qubit))
-            else:
-                # Add a X.
-                circuit.append(cirq.rx(params[2*i])(qubit))
-                #circuit.append(cirq.rx(random_rot)(qubit))
-    for src, dest in zip(qubits, qubits[1:]):
-        circuit.append(cirq.CZ(src, dest))
-        
-    return circuit
-
-def SPSATEST_PQC(circuit, qubits, n_layers=1, n_qubits=4):
-    params = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
-    prep_and_U = SPSA1_PQC(circuit, qubits, n_layers, n_qubits)
-    circuit.append(prep_and_U)
-    
-    U_dagger = (prep_and_U[1:])**-1
-    circuit.append(cirq.resolve_parameters(U_dagger, param_resolver={symbol: np.random.uniform() * 2 * np.pi}))
-    
-    for layer in range(n_layers):
-        prep_and_U_circuit = generate_random_qnn(qubits, np.random.uniform() * 2 * np.pi, 4)
-        U_circuit = prep_and_U_circuit[1:]
-        circuit.append(U_circuit)
-        circuit.append(U_circuit**-1)
+            #symbol = sympy.Symbol('theta_{}'.format(i+1+n_qubits*(layer+1)))
+            circuit.append(cirq.ry(params[i+n_qubits*(layer+1)])(qubit))
     print(circuit)
 
 # def SPSA1P_pqc(circuit, qubits, n_layers, n_qubits=4):
