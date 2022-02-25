@@ -103,6 +103,20 @@ def qc10_pqc_two_design(circuit, qubits, n_layers=1, n_qubits=4):
             circuit.append(cirq.ry(params[i+n_qubits*(layer+1)])(qubit))
     # print(circuit)
 ###############################################################################
+def qc102_pqc(circuit, qubits, n_layers=1, n_qubits=4):
+    #print("QC102_PQC")
+    params  = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
+    for i, qubit in enumerate(qubits):
+        #symbol = sympy.Symbol('theta_{}'.format(i+1))
+        circuit.append(cirq.ry(params[i])(qubit))
+    for layer in range(n_layers):
+        #for i in range(n_qubits):
+        for i in range(1,n_qubits,2):
+            circuit.append(cirq.CZ(qubits[i-1],qubits[i]))
+        for i, qubit in enumerate(qubits):
+            circuit.append(cirq.rz(params[i+n_qubits*(layer+1)])(qubit))
+    #print(circuit)
+###############################################################################
 def generic_pqc(circuit, qubits, n_layers=1, n_qubits=4):
     # print("GENERIC_PQC")
     params  = sympy.symbols('theta:{}'.format(6*n_qubits*n_layers))
