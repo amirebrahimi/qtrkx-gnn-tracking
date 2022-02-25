@@ -12,71 +12,44 @@ def measure_last(qubits, n_measurements=1):
 ###############################################################
 ###############################################################
 def simple_encoding_y(circuit, qubits, n_qubits=4):
-    print("SIMPLE_ENCODING_Y")
     input_  = sympy.symbols('x:{}'.format(n_qubits))
     for idx, qubit in enumerate(qubits):
         circuit.append(cirq.ry(input_[idx])(qubit))
-    print(circuit)
 def yz_arccos(circuit, qubits, n_qubits=4):
-    print("YZ_ARCCOS")
-    input_  = sympy.symbols('x:{}'.format(n_qubits))
-    for idx, qubit in enumerate(qubits):
-            circuit.append(cirq.ry(input_[idx])(qubit))
-            circuit.append(cirq.rz(input_[idx])(qubit))
-    print(circuit)
+        input_  = sympy.symbols('x:{}'.format(n_qubits))
+        for idx, qubit in enumerate(qubits):
+                circuit.append(cirq.ry(input_[idx])(qubit))
+                circuit.append(cirq.rz(input_[idx])(qubit))
 def simple_encoding_z(circuit, qubits, n_qubits=4):
-    print("SIMPLE ENCODING_Z")
     input_  = sympy.symbols('x:{}'.format(n_qubits))
     for idx, qubit in enumerate(qubits):
         circuit.append(cirq.H(qubit))
         circuit.append(cirq.rz(input_[idx])(qubit))
-    print(circuit)
 def simple_encoding_x(circuit, qubits, n_qubits=4):
-    print("SIMPLE_ENCODING_X")
     input_  = sympy.symbols('x:{}'.format(n_qubits))
     for idx, qubit in enumerate(qubits):
         circuit.append(cirq.rx(input_[idx])(qubit))
-    print(circuit)
 def ZZFeatureMap(circuit, qubits, n_qubits=4):
     input_  = sympy.symbols('x:{}'.format(n_qubits))
     for idx, qubit in enumerate(qubits):
         circuit.append(cirq.H(qubit))
-        U1 = cirq.ZPowGate(exponent=2*input_[idx])
-        circuit.append(U1(qubit))
-    for idx in range(n_qubits-1):
-        idy = idx + 1;
-        circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
-        #v = input_[idx]*input_[idy]
-        v = 2*(np.pi - input_[idx])*(np.pi - input_[idy])
-        U1 = cirq.ZPowGate(exponent=v)
-        circuit.append(U1(qubits[idy]))
-        circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
-    print(circuit)
-# def ZZFeatureMap(circuit, qubits, n_qubits=4):
-#     print("ZZFEATUREMAP")
-#     input_  = sympy.symbols('x:{}'.format(n_qubits))
-#     for idx, qubit in enumerate(qubits):
-#         circuit.append(cirq.H(qubit))
-#     for _ in range(2):
-#         for idx, qubit in enumerate(qubits):
-#             U1 = cirq.ZPowGate(exponent=2*input_[idx])
-#             circuit.append(U1(qubit))
-#         for idx in range(n_qubits-1):
-#             for idy in range(idx+1, n_qubits):
-#                 circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
-#                 v = 2*(np.pi - input_[idx])*(np.pi - input_[idy])
-#                 U1 = cirq.ZPowGate(exponent=v)
-#                 circuit.append(U1(qubits[idy]))
-#                 circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
-#     print(circuit)
-
+    for _ in range(2):
+        for idx, qubit in enumerate(qubits):
+            U1 = cirq.ZPowGate(exponent=2*input_[idx])
+            circuit.append(U1(qubit))
+        for idx in range(n_qubits-1):
+            for idy in range(idx+1, n_qubits):
+                circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
+                v = 2*(np.pi - input_[idx])*(np.pi - input_[idy])
+                U1 = cirq.ZPowGate(exponent=v)
+                circuit.append(U1(qubits[idy]))
+                circuit.append(cirq.CNOT(qubits[idx], qubits[idy]))
 ###############################################################
 ###############################################################
 #############    PARAMETRIZED QUANTUM CIRCUITS    #############
 ###############################################################
 ###############################################################
 def qc10_pqc(circuit, qubits, n_layers=1, n_qubits=4):
-    print("QC10_PQC")
     params  = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
     for i, qubit in enumerate(qubits):
         #symbol = sympy.Symbol('theta_{}'.format(i+1))
@@ -87,10 +60,8 @@ def qc10_pqc(circuit, qubits, n_layers=1, n_qubits=4):
         for i, qubit in enumerate(qubits):
             #symbol = sympy.Symbol('theta_{}'.format(i+1+n_qubits*(layer+1)))
             circuit.append(cirq.ry(params[i+n_qubits*(layer+1)])(qubit))
-    print(circuit)
 ###############################################################################
 def generic_pqc(circuit, qubits, n_layers=1, n_qubits=4):
-    print("GENERIC_PQC")
     params  = sympy.symbols('theta:{}'.format(6*n_qubits*n_layers))
     for layer in range(n_layers):
         NN_entangler(circuit, qubits)
@@ -103,10 +74,9 @@ def generic_pqc(circuit, qubits, n_layers=1, n_qubits=4):
             n_gate = i+(2*layer+1)*n_qubits
             n_param = n_gate*3
             U3(params[n_param+0], params[n_param+1], params[n_param+2], circuit, qubit)
-    print(circuit)
+
 ###############################################################################
 def TTN(circuit, qubits, n_layers=None, n_qubits=4):
-    print("TTN")
     # n_qubits must be a multiple of 4
     assert (n_qubits%4)==0
     n_layers = int(np.log2(n_qubits))
@@ -123,7 +93,6 @@ def TTN(circuit, qubits, n_layers=None, n_qubits=4):
     circuit.append(cirq.ry(params[param_count])(qubits[n_qubits-1]))
 ###############################################################################
 def MPS(circuit, qubits, n_layers=None, n_qubits=4):
-    print("MPS")
     # n_qubits must be a multiple of 4
     assert (n_qubits%4)==0
     n_layers = int(n_qubits-1)
@@ -136,7 +105,6 @@ def MPS(circuit, qubits, n_layers=None, n_qubits=4):
     circuit.append(cirq.ry(params[param_count])(qubits[n_qubits-1]))
 ###############################################################################
 def qc10_pqc_local(circuit, qubits, n_layers=1, n_qubits=4):
-    print("QC10_PQC_LOCAL")
     params  = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
     for i, qubit in enumerate(qubits):
         #symbol = sympy.Symbol('theta_{}'.format(i+1))
@@ -149,10 +117,8 @@ def qc10_pqc_local(circuit, qubits, n_layers=1, n_qubits=4):
                 circuit.append(cirq.ry(params[i+n_qubits*(layer+1)])(qubit))
         else:
             circuit.append(cirq.ry(params[n_qubits*(layer+1)])(qubit))
-    print(circuit)
 ###############################################################################
 def qc19_pqc(circuit, qubits, n_layers=1, n_qubits=4):
-    print("QC19_PQC")
     params  = sympy.symbols('theta:{}'.format(3*n_qubits*n_layers))
     param_count = 0
     for layer in range(n_layers):
@@ -166,10 +132,8 @@ def qc19_pqc(circuit, qubits, n_layers=1, n_qubits=4):
             # implementation is explained here: https://stackoverflow.com/questions/61852590/how-do-i-implement-a-controlled-rx-in-cirq-tensorflow-quantum
             circuit.append(cirq.CNOT(qubits[(n_qubits-1-i)%n_qubits], qubits[(n_qubits-i)%n_qubits])**(params[param_count]/np.pi))
             param_count += 1
-    print(circuit)
 ###############################################################################
 def qc10P_pqc(circuit, qubits, n_layers=1, n_qubits=4):
-    print("QC10P_PQC")
     n_params = 2*n_qubits*(1+n_layers)
     params  = sympy.symbols('theta:{}'.format(n_params))
     for i, qubit in enumerate(qubits):
@@ -183,10 +147,8 @@ def qc10P_pqc(circuit, qubits, n_layers=1, n_qubits=4):
             #symbol = sympy.Symbol('theta_{}'.format(i+1+n_qubits*(layer+1)))
             circuit.append(cirq.ry(params[2*i+2*n_qubits*(layer+1)])(qubit))
             circuit.append(cirq.rx(params[2*i+1+2*n_qubits*(layer+1)])(qubit))
-    print(circuit)
 ###############################################################################
 def qc6_pqc(circuit, qubits, n_layers=1, n_qubits=4):
-    print("QC6_PQC")
     params = sympy.symbols('theta:{}'.format((n_qubits**2 + 3*n_qubits)*n_layers))
     param_count = 0
     for layer in range(n_layers):
@@ -211,81 +173,6 @@ def qc6_pqc(circuit, qubits, n_layers=1, n_qubits=4):
             param_count += 1
             circuit.append(cirq.rz(params[param_count])(qubit))
             param_count += 1
-    print(circuit)
-###############################################################################
-############################## SPSA Circuits ##################################
-###############################################################################
-# def generate_random_qnn(circuit, qubits, params, n_layers=1):       
-#     #params = sympy.symbols('theta:{}'.format(n_layers)
-
-#     """Generate random QNN's with the same structure from McClean et al."""
-#     for qubit in qubits:
-#         circuit += cirq.ry(np.pi / 4.0)(qubit)
-
-#     for d in range(n_layers):
-#         # Add a series of single qubit rotations.
-#         for i, qubit in enumerate(qubits):
-#             random_n = np.random.uniform()
-#             random_rot = np.random.uniform(
-#             ) * 2.0 * np.pi if i != 0 or d != 0 else params
-#             if random_n > 2. / 3.:
-#                 # Add a Z.
-#                 circuit += cirq.rz(random_rot)(qubit)
-#             elif random_n > 1. / 3.:
-#                 # Add a Y.
-#                 circuit += cirq.ry(random_rot)(qubit)
-#             else:
-#                 # Add a X.
-#                 circuit += cirq.rx(random_rot)(qubit)
-
-#         # Add CZ ladder.
-#         for src, dest in zip(qubits, qubits[1:]):
-#             circuit += cirq.CZ(src, dest)
-
-#     return circuit
-           
-# def SPSA1_pqc(circuit, qubits, block_depth=1, n_layers=1):
-#     params = sympy.symbols('theta:{}'.format(1)
-                           
-#     # Generate initial block with symbol.
-#     prep_and_U = generate_random_qnn(circuit, qubits, params, n_layers)
-#     circuit += prep_and_U
-    
-#     # Generate dagger of initial block without symbol.
-#     U_dagger = (prep_and_U[1:])**-1
-#     circuit += cirq.resolve_parameters(
-#         U_dagger, param_resolver={symbol: np.random.uniform() * 2 * np.pi})
-    
-#     for d in range(n_layers - 1):
-#         # Get a random QNN.
-#         prep_and_U_circuit = generate_random_qnn(circuit, qubits, np.random.uniform() * 2 * np.pi, block_depth)
-
-#         # Remove the state-prep component
-#         U_circuit = prep_and_U_circuit[1:]
-
-#         # Add U
-#         circuit += U_circuit
-
-#         # Add U^dagger
-#         circuit += U_circuit**-1
-    
-#     return circuit
-def SPSA2_PQC(circuit, qubits, n_layers=1, n_qubits=4):
-    print("SPSA2_PQC")
-    params  = sympy.symbols('theta:{}'.format(n_qubits*(1+n_layers)))
-    for i, qubit in enumerate(qubits):
-        #symbol = sympy.Symbol('theta_{}'.format(i+1))
-        circuit.append(cirq.ry(params[i])(qubit))
-    for layer in range(n_layers):
-        for i in range(n_qubits):
-            circuit.append(cirq.CZ(qubits[(n_qubits-2-i)%n_qubits], qubits[(n_qubits-1-i)%n_qubits]))
-        for i, qubit in enumerate(qubits):
-            #symbol = sympy.Symbol('theta_{}'.format(i+1+n_qubits*(layer+1)))
-            circuit.append(cirq.ry(params[i+n_qubits*(layer+1)])(qubit))
-    print(circuit)
-
-# def SPSA1P_pqc(circuit, qubits, n_layers, n_qubits=4):
-#     return 1
 ###############################################################################
 ############################## Helper Functions ###############################
 ###############################################################################
