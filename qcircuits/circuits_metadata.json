@@ -76,13 +76,16 @@
         "19": "qc19_pqc",
         "10": "qc10_pqc",
         "10P": "qc10P_pqc",
+	"102": "qc102_pqc",
+	"103": "qc103_pqc",
+	"104": "qc104_pqc",
+	"105": "qc105_pqc",
         "6": "qc6_pqc",
         "generic": "generic_pqc",
         "TTN": "TTN",
         "MPS": "MPS",
         "10_local": "qc10_pqc_local",
         "SPSA2": "SPSA2_PQC",
-        "10_2des": "qc10_pqc_two_design",
-        "qc102_pqc": "qc102_pqc"
+        "10_2des": "qc10_pqc_two_design"
     }
 }

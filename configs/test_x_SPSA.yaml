@@ -4,9 +4,9 @@ dataset     : 'mu200_1pT'
 log_dir     : 'logs/test/'
 run_type    : 'new_run'
 gpu         : '0'
-n_files     : 10
-n_valid     : 5
-n_train     : 5
+n_files     : 100
+n_valid     : 50
+n_train     : 50
 batch_size  : 1 
 lr_c        : 0.01
 n_iters     : 3

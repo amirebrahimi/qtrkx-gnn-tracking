@@ -19,14 +19,14 @@ loss_func: 'BinaryCrossentropy'
 n_thread    : 8
 log_verbosity: 2
 EN_qc:
-  PQC_id  : 'qc102_pqc'
+  PQC_id  : '102'
   IEC_id  : 'simple_encoding_y'
   MC_id   : 'measure_all'
   n_layers : 3
   repetitions: 0
   n_qubits: 4
 NN_qc:
-  PQC_id  : 'qc102_pqc'
+  PQC_id  : '102'
   IEC_id  : 'simple_encoding_y'
   MC_id   : 'measure_all'
   n_layers : 3
