@@ -1,0 +1,41 @@
+new QGNN
+vanishing gradients at epoch 3, batch 4
+
+2022-02-24 22:15:37.226895: Epoch: 10, Batch: 5, Loss: 0.6751, Elapsed: 0m7s
+2022-02-24 22:15:37.328546 Starting testing the valid set with 5 subgraphs!
+2022-02-24 22:16:03.425148: validation Test:  Loss: 0.6739,  AUC: 0.6694, Acc: 60.4849,  Precision: 0.6944 -- Elapsed: 0m26s
+2022-02-24 22:16:03.426312 Starting testing the train set with 5 subgraphs!
+2022-02-24 22:16:31.749895: training Test:  Loss: 0.6756,  AUC: 0.6639, Acc: 59.6964,  Precision: 0.6899 -- Elapsed: 0m28s
+2022-02-24 22:16:31.751893: Training completed!
+
+real    15m49.392s
+user    60m38.710s
+sys     3m5.721s
+
+
+old QGNN
+vanishing gradients at epoch 1, batch 1
+2022-02-24 22:35:13.967430: Epoch: 10, Batch: 5, Loss: 0.5542, Elapsed: 0m11s
+2022-02-24 22:35:39.544351: validation Test:  Loss: 0.5378,  AUC: 0.8110, Acc: 73.5269,  Precision: 0.7489 -- Elapsed: 0m25s
+2022-02-24 22:35:39.545395 Starting testing the train set with 5 subgraphs!
+2022-02-24 22:36:06.794548: training Test:  Loss: 0.5384,  AUC: 0.8103, Acc: 73.4099,  Precision: 0.7505 -- Elapsed: 0m27s
+2022-02-24 22:36:06.795367: Training completed!
+
+real    17m33.330s
+user    67m14.899s
+sys     2m58.529s
+
+
+new QGNN, 10 circuit
+no vanishing gradients
+
+2022-02-24 22:59:06.029586: Epoch: 10, Batch: 5, Loss: 0.6155, Elapsed: 0m12s
+2022-02-24 22:59:06.085029 Starting testing the valid set with 5 subgraphs!
+2022-02-24 22:59:32.348521: validation Test:  Loss: 0.6035,  AUC: 0.7475, Acc: 70.0825,  Precision: 0.7298 -- Elapsed: 0m26s
+2022-02-24 22:59:32.349255 Starting testing the train set with 5 subgraphs!
+2022-02-24 22:59:59.915923: training Test:  Loss: 0.6000,  AUC: 0.7508, Acc: 70.2582,  Precision: 0.7285 -- Elapsed: 0m27s
+2022-02-24 22:59:59.917708: Training completed!
+
+real    18m7.906s
+user    69m20.978s
+sys     3m1.972s
