@@ -83,6 +83,10 @@ class QCircuit:
 			n_params = 2*self.n_qubits - 1
 		elif self.PQC_id == '10_local':
 			n_params = self.n_qubits*self.n_layers+1
+		elif self.PQC_id == 'SPSA2':
+			n_params = self.n_qubits*(self.n_layers+1)
+		elif self.PQC_id == '10_2des':
+			n_params = self.n_qubits*(self.n_layers+1)
 		else:
 			raise ValueError('PQC weights not defined')
 		return n_params

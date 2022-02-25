@@ -80,7 +80,8 @@
         "generic": "generic_pqc",
         "TTN": "TTN",
         "MPS": "MPS",
-        "10_local"  : "qc10_pqc_local",
-        "SPSA2" : "SPSA2_PQC"
+        "10_local": "qc10_pqc_local",
+        "SPSA2": "SPSA2_PQC",
+        "10_2des": "qc10_pqc_two_design"
     }
 }
