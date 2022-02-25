@@ -236,7 +236,7 @@ class NodeNet(tf.keras.layers.Layer):
         # this value is a preference and can be changed 
         # to do: add the scaling as a configuration input
         input_to_circuit = self.input_layer(M) * np.pi
-
+        print("Input to NodeNet shape: ", input_to_circuit.shape)
         # Combine input data with parameters in a single circuit_data matrix
         circuit_data = tf.concat(
             [
@@ -244,7 +244,7 @@ class NodeNet(tf.keras.layers.Layer):
                 tf.repeat(self.params,repeats=input_to_circuit.shape[0],axis=0)
             ],
             axis=1
-        )        
+        )
 
         # Get expectation values for all nodes
         if GNN.config['NN_qc']['repetitions']==0:

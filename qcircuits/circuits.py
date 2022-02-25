@@ -63,7 +63,7 @@ def ZZFeatureMap(circuit, qubits, n_qubits=4):
         circuit.append(cirq.CNOT(qubits[idx], qubits[idx+1]))
         v = 2*(np.pi - input_[idx])*(np.pi - input_[idx+1])
         U1 = cirq.ZPowGate(exponent=v)
-        circuit.append(U1(qubits[idy]))
+        circuit.append(U1(qubits[idx]))
         circuit.append(cirq.CNOT(qubits[idx], qubits[idx+1]))
     print(circuit)
 
