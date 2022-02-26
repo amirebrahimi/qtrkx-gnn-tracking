@@ -9,7 +9,7 @@ n_valid     : 5
 n_train     : 5
 batch_size  : 1 
 lr_c        : 0.01
-n_iters     : 3
+n_iters     : 2
 n_epoch     : 10
 TEST_every  : 5
 hid_dim     : 4
@@ -19,16 +19,16 @@ loss_func: 'BinaryCrossentropy'
 n_thread    : 8
 log_verbosity: 2
 EN_qc:
-  PQC_id  : 'qc102_pqc'
+  PQC_id  : 'qc10_pqc_identity'
   IEC_id  : 'simple_encoding_y'
   MC_id   : 'measure_all'
-  n_layers : 3
+  n_layers : 2
   repetitions: 0
   n_qubits: 4
 NN_qc:
-  PQC_id  : 'qc102_pqc'
+  PQC_id  : 'qc10_pqc_identity'
   IEC_id  : 'simple_encoding_y'
   MC_id   : 'measure_all'
-  n_layers : 3
+  n_layers : 2
   repetitions: 0
   n_qubits: 4

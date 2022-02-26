@@ -39,3 +39,22 @@ no vanishing gradients
 real    18m7.906s
 user    69m20.978s
 sys     3m1.972s
+
+---- AWS runs
+
+test_QGNN_mews.yaml
+2022-02-25 08:20:03.934317: Epoch: 20, Batch: 50, Loss: 0.5686, Elapsed: 0m0s
+2022-02-25 08:20:03.936838 Starting testing the valid set with 50 subgraphs!
+2022-02-25 08:20:41.384742: validation Test:  Loss: 0.5090,  AUC: 0.6497, Acc: 77.6384,  Precision: 0.6566 -- Elapsed: 0m37s
+2022-02-25 08:20:41.384810 Starting testing the train set with 50 subgraphs!
+2022-02-25 08:21:17.370571: training Test:  Loss: 0.5185,  AUC: 0.6539, Acc: 76.8595,  Precision: 0.6703 -- Elapsed: 0m35s
+2022-02-25 08:21:17.370648: Training completed!
+
+real    50m45.009s
+user    102m19.745s
+sys     0m23.664s
+
+test_QGNN_mews_og.yaml
+20, 50, 0.534698, 1.328525
+
+---
