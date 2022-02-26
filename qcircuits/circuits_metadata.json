@@ -86,6 +86,8 @@
         "MPS": "MPS",
         "10_local": "qc10_pqc_local",
         "SPSA2": "SPSA2_PQC",
-        "10_2des": "qc10_pqc_two_design"
+        "10_2des": "qc10_pqc_two_design",
+        "qc102_pqc": "qc102_pqc",
+        "qc10_pqc_identity": "qc10_pqc_identity"
     }
 }
